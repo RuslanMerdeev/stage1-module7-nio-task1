@@ -1,10 +1,11 @@
 package com.epam.mjc.nio;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class FileReader {
@@ -21,9 +22,9 @@ public class FileReader {
 
     private Map<String, String> fileToMap(File file) {
         Map<String, String> map = new HashMap<>();
-        try {
-            List<String> lines = Files.readAllLines(file.toPath());
-            for (String line : lines) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(file.toPath())))) {
+            while (reader.ready()) {
+                String line = reader.readLine();
                 String[] split = line.split(": ");
                 map.put(split[0], split[1]);
             }
